@@ -16,24 +16,34 @@ var camera, scene, renderer;
 var geometry, material, mesh;
 var clock;
 
+function cubo(x, y, z, material, color, wf) {
+	geometry = new THREE.CubeGeometry(x, y, z);
+    switch(material) {
+    	case 'Basic': material = new THREE.MeshBasicMaterial({color: color, wireframe: wf}); break;
+    	case 'Standard': material = new THREE.MeshStandardMaterial({color: color, wireframe: wf}); break;
+    	case 'Physical': material = new THREE.MesPhysicalMaterial({color: color, wireframe: wf}); break;
+    	case 'Phong': material = new THREE.MeshPhongMaterial({color: color, wireframe: wf}); break;
+    	case 'Lambert': material = new THREE.MeshLambertMaterial({color: color, wireframe: wf}); break;
+    }
+    cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    return cube;
+}
+
 function init() {
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
-    geometry = new THREE.CubeGeometry(1, 1, 1);
-    material = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        wireframe: true
-    });
-    mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    mesh = cubo(1, 1, 1, 'Basic', 'green', true);
+    mesh2 = cubo(2, 2, 2, 'Basic', 'red', true);
 
     const axesHelper = new THREE.AxesHelper(10);
     scene.add(axesHelper);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 0, -3);
+    camera.position.set(6, 6, 6);
+    mesh.position.set(0.5, 0.5, 0.5);
     camera.lookAt(mesh.position);
     clock = new THREE.Clock();
     window.addEventListener('resize', onWindowResize, false);
